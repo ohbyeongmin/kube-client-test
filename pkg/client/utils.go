@@ -12,14 +12,6 @@ import (
 
 type NAMESPACE string
 
-const (
-	TestFilePath = "testdata"
-	Namespace    = "namespace.yaml"
-	Deployment   = "deployment.yaml"
-	Pvc          = "persistent-volume-claim.yaml"
-	Service      = "service.yaml"
-)
-
 func ReadYAMLFile(path string, name string) []byte {
 	p := filepath.Join(path, name)
 	b, err := ioutil.ReadFile(p)
