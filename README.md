@@ -5,14 +5,22 @@ v0.1
 ### example
 ##### Create workload and Client
 ```go
+// File path and yaml files
+const (
+    TestFilePath = "testdata"
+    Deployment   = "deployment.yaml"
+    Pvc          = "persistent-volume-claim.yaml"
+    Service      = "service.yaml"
+)
+
 // Create client
 c := client.NewClient()
 
 // Get yaml files for workload
-f := client.GetTestFileListToBytes(client.TestFilePath, client.Pvc, client.Deployment, client.Service)
+f := client.GetTestFileListToBytes(TestFilePath, Pvc, Deployment, Service)
 
 // Create workload object
-newWorkload := client.NewWorkload("cdm-test", f)
+newWorkload := client.NewWorkload("client-test", f)
 
 // Add workload to client
 c.AddWorkload(newWorkload)
@@ -20,10 +28,14 @@ c.AddWorkload(newWorkload)
 ##### Apply workload
 ```go
 // Apply workload
-c.ApplyWorkload("cdm-test")
+c.ApplyWorkload("client-test")
 ```
 ##### Delete workload
 ```go
 // Delete workload
-c.DeleteWorkload("cdm-test")
+c.DeleteWorkload("client-test")
 ```
+##### Screen shot
+![filelist](./img/filelist.png)
+![apply](./img/apply.png)
+![delete](./img/delete.png)
