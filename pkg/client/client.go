@@ -109,3 +109,111 @@ func (c *Client) DeleteWorkload(namespace NAMESPACE) error {
 
 	return nil
 }
+
+func (c *Client) GetDeploymentList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.AppsV1().Deployments(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}
+
+func (c *Client) GetServiceList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.CoreV1().Services(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}
+
+func (c *Client) GetReplicasetList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.AppsV1().ReplicaSets(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}
+
+func (c *Client) GetPodList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.CoreV1().Pods(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}
+
+func (c *Client) GetPVCList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.CoreV1().PersistentVolumeClaims(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}
+
+func (c *Client) GetPVList(namespace NAMESPACE) ([]string, error) {
+	list, err := c.client.CoreV1().PersistentVolumes().List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	var ret []string
+	for _, item := range list.Items {
+		s, err := convertToString(item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+
+	return ret, nil
+}

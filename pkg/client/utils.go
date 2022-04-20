@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
 
@@ -42,4 +43,13 @@ func AddDivisionLine(data []byte) []byte {
 	byte_buf.WriteString("\n---\n")
 
 	return byte_buf.Bytes()
+}
+
+func convertToString(something any) (string, error) {
+	marshal, err := json.Marshal(something)
+	if err != nil {
+		return "", err
+	}
+
+	return string(marshal), nil
 }
