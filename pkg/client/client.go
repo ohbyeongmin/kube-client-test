@@ -100,13 +100,9 @@ func (c *Client) ApplyWorkload(namespace NAMESPACE) error {
 
 func (c *Client) DeleteWorkload(namespace NAMESPACE) error {
 	ctx := context.TODO()
-	a := c.client.CoreV1().Namespaces()
-	ns, err := a.Get(ctx, string(namespace), metav1.GetOptions{})
-	if err != nil {
-		return err
-	}
+	ni := c.client.CoreV1().Namespaces()
 
-	err = a.Delete(ctx, ns.GetName(), metav1.DeleteOptions{})
+	err := ni.Delete(ctx, string(namespace), metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
