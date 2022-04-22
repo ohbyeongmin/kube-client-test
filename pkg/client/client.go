@@ -3,12 +3,16 @@ package client
 import (
 	"context"
 	"flag"
+	"fmt"
+	"k8s.io/klog/v2"
 	"path/filepath"
 
 	k8utils "github.com/pytimer/k8sutil/apply"
 
 	apiv1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	unstructuredv1 "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
@@ -216,4 +220,82 @@ func (c *Client) GetPVList(namespace NAMESPACE) ([]string, error) {
 	}
 
 	return ret, nil
+}
+
+func (c *Client) listByAPI(ctx context.Context, api APIResource, ns string) (*unstructuredv1.UnstructuredList, error) {
+	var ri dynamic.ResourceInterface
+	var items []unstructuredv1.Unstructured
+	var next string
+
+	isClusterScopeRequest := !api.Namespaced || ns == ""
+	if isClusterScopeRequest {
+		ri = c.dynamic.Resource(api.GroupVersionResource())
+	} else {
+		ri = c.dynamic.Resource(api.GroupVersionResource()).Namespace(ns)
+	}
+	for {
+		objectList, err := ri.List(ctx, metav1.ListOptions{
+			Limit:    250,
+			Continue: next,
+		})
+		if err != nil {
+			switch {
+			case apierrors.IsForbidden(err):
+				if isClusterScopeRequest {
+					klog.V(4).Infof("No access to list at cluster scope for resource: %s", api)
+				} else {
+					klog.V(4).Infof("No access to list in the namespace \"%s\" for resource: %s", ns, api)
+				}
+				return nil, err
+			case apierrors.IsNotFound(err):
+				break
+			default:
+				if isClusterScopeRequest {
+					err = fmt.Errorf("failed to list resource type \"%s\" in API group \"%s\" at the cluster scope: %w", api.Name, api.Group, err)
+				} else {
+					err = fmt.Errorf("failed to list resource type \"%s\" in API group \"%s\" in the namespace \"%s\": %w", api.Name, api.Group, ns, err)
+				}
+				return nil, err
+			}
+		}
+		if objectList == nil {
+			break
+		}
+		items = append(items, objectList.Items...)
+		next = objectList.GetContinue()
+		if len(next) == 0 {
+			break
+		}
+	}
+
+	if isClusterScopeRequest {
+		klog.V(4).Infof("Got %4d objects from resource at the cluster scope: %s", len(items), api)
+	} else {
+		klog.V(4).Infof("Got %4d objects from resource in the namespace \"%s\": %s", len(items), ns, api)
+	}
+	return &unstructuredv1.UnstructuredList{Items: items}, nil
+}
+
+type BYTE []byte
+
+func (c *Client) GetTestObjectList(resources []APIResource, namespace NAMESPACE) []BYTE {
+	var result []BYTE
+	var ul []*unstructuredv1.UnstructuredList
+
+	for _, r := range resources {
+		t, _ := c.listByAPI(context.Background(), r, string(namespace))
+		ul = append(ul, t)
+	}
+
+	for _, r := range ul {
+		for _, u := range r.Items {
+			s, err := u.MarshalJSON()
+			if err != nil {
+				panic(err)
+			}
+			result = append(result, s)
+		}
+	}
+
+	return result
 }
