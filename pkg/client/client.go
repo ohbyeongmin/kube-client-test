@@ -114,113 +114,113 @@ func (c *Client) DeleteWorkload(namespace NAMESPACE) error {
 	return nil
 }
 
-func (c *Client) GetDeploymentList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.AppsV1().Deployments(string(namespace)).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetServiceList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.CoreV1().Services(string(namespace)).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetReplicasetList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.AppsV1().ReplicaSets(string(namespace)).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetPodList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.CoreV1().Pods(string(namespace)).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetPVCList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.CoreV1().PersistentVolumeClaims(string(namespace)).List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
-
-func (c *Client) GetPVList(namespace NAMESPACE) ([]string, error) {
-	list, err := c.client.CoreV1().PersistentVolumes().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	var ret []string
-	for _, item := range list.Items {
-		s, err := convertToString(item)
-		if err != nil {
-			return nil, err
-		}
-		ret = append(ret, s)
-	}
-
-	return ret, nil
-}
+//func (c *Client) GetDeploymentList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.AppsV1().Deployments(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
+//
+//func (c *Client) GetServiceList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.CoreV1().Services(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
+//
+//func (c *Client) GetReplicasetList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.AppsV1().ReplicaSets(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
+//
+//func (c *Client) GetPodList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.CoreV1().Pods(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
+//
+//func (c *Client) GetPVCList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.CoreV1().PersistentVolumeClaims(string(namespace)).List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
+//
+//func (c *Client) GetPVList(namespace NAMESPACE) ([]string, error) {
+//	list, err := c.client.CoreV1().PersistentVolumes().List(context.TODO(), metav1.ListOptions{})
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	var ret []string
+//	for _, item := range list.Items {
+//		s, err := convertToString(item)
+//		if err != nil {
+//			return nil, err
+//		}
+//		ret = append(ret, s)
+//	}
+//
+//	return ret, nil
+//}
 
 func (c *Client) listByAPI(ctx context.Context, api APIResource, ns string) (*unstructuredv1.UnstructuredList, error) {
 	var ri dynamic.ResourceInterface
@@ -278,23 +278,13 @@ func (c *Client) listByAPI(ctx context.Context, api APIResource, ns string) (*un
 
 type BYTE []byte
 
-func (c *Client) GetTestObjectList(resources []APIResource, namespace NAMESPACE) []BYTE {
-	var result []BYTE
-	var ul []*unstructuredv1.UnstructuredList
+func (c *Client) GetTestObjectList(resources []APIResource, namespace NAMESPACE) []*string {
+	var result []*string
 
 	for _, r := range resources {
 		t, _ := c.listByAPI(context.Background(), r, string(namespace))
-		ul = append(ul, t)
-	}
-
-	for _, r := range ul {
-		for _, u := range r.Items {
-			s, err := u.MarshalJSON()
-			if err != nil {
-				panic(err)
-			}
-			result = append(result, s)
-		}
+		list, _ := listToStrings(t)
+		result = append(result, list...)
 	}
 
 	return result

@@ -2,7 +2,6 @@ package client
 
 import (
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
 
@@ -45,11 +44,23 @@ func AddDivisionLine(data []byte) []byte {
 	return byte_buf.Bytes()
 }
 
-func convertToString(something any) (string, error) {
-	marshal, err := json.Marshal(something)
+func unstructuredToString(item *unstructured.Unstructured) (*string, error) {
+	bytes, err := item.MarshalJSON()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
+	var s = string(bytes)
+	return &s, nil
+}
 
-	return string(marshal), nil
+func listToStrings(list *unstructured.UnstructuredList) ([]*string, error) {
+	var ret []*string
+	for _, item := range list.Items {
+		s, err := unstructuredToString(&item)
+		if err != nil {
+			return nil, err
+		}
+		ret = append(ret, s)
+	}
+	return ret, nil
 }
